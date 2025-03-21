@@ -64,15 +64,15 @@ class CommandsCfg:
 
     ee_pose = mdp.UniformPoseCommandCfg(
         asset_name="robot",
-        body_name = ".*",
+        body_name = "wrist_3_link",
         resampling_time_range=(4.0,4.0),
         debug_vis = True,
         ranges=mdp.UniformPoseCommandCfg.Ranges(
-            pos_x=(-0.05, 0.1),
-            pos_y=(-0.1, 0.1),
-            pos_z=(-0.05, 0.1),
-            roll=(-3.14, 3.14),
-            pitch = (-3.14,3.14),  # depends on end-effector axis
+            pos_x=(0.35, 0.65),
+            pos_y=(-0.2, 0.2),
+            pos_z=(0.15, 0.5),
+            roll=(0.0, 0.0),
+            pitch = (0.0,0.0),  # depends on end-effector axis
             yaw=(-3.14, 3.14),
         )
     )
@@ -109,7 +109,7 @@ class EventCfg:
         func=mdp.reset_joints_by_scale,
         mode="reset",
         params={
-            "position_range": (0.05,1),
+            "position_range": (0.5,1.5),
             "velocity_range": (0.0,0.0)
         }
     )
@@ -121,27 +121,27 @@ class RewardsCfg:
     #task terms
     end_effector_position= RewTerm(
         func=mdp.position_command_error,
-        weight=-.2,
+        weight=-0.2,
         params={"asset_cfg": SceneEntityCfg("robot", body_names=[".*"]), "command_name": "ee_pose"}
     )
 
     end_effector_position_tracking_fine_grained = RewTerm(
         func = mdp.position_command_error_tanh,
-        weight=0.3,
-        params={"asset_cfg": SceneEntityCfg("robot", body_names=["wrist_3_link"]), "std": 0.1, "command_name": "ee_pose"}
+        weight=0.1,
+        params={"asset_cfg": SceneEntityCfg("robot", body_names=[".*"]), "std": 0.1, "command_name": "ee_pose"}
     )
 
     end_effector_oreintation_tracking = RewTerm(
         func = mdp.orientation_command_error,
-        weight=0.2,
-        params={"asset_cfg": SceneEntityCfg("robot", body_names=["wrist_3_link"]), "command_name": "ee_pose"}
+        weight=0.1,
+        params={"asset_cfg": SceneEntityCfg("robot", body_names=[".*"]), "command_name": "ee_pose"}
     )
 
     #action penalty
-    action_rate = RewTerm(func=mdp.action_rate_l2, weight = -0.001)
+    action_rate = RewTerm(func=mdp.action_rate_l2, weight = -0.0001)
     joint_vel = RewTerm(
         func=mdp.joint_vel_l2,
-        weight=-0.001,
+        weight=-0.0001,
         params={"asset_cfg": SceneEntityCfg("robot")}
     )
 
@@ -182,6 +182,6 @@ class UR3ReachEnv(ManagerBasedRLEnvCfg):
         """Post initialisation """
         self.decimation = 2
         self.sim.render_interval=self.decimation
-        self.episode_length_s = 20.0
+        self.episode_length_s = 12.0
         self.viewer.eye = (3.5,3.5,3.5)
         self.sim.dt=1/60

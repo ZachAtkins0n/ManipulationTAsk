@@ -11,6 +11,7 @@ gym.register(
     entry_point=f"{__name__}.UR3Reach:UR3ReachCfg",
     disable_env_checker=True,
     kwargs={
+         "env_cfg_entry_point": f"{__name__}.UR3Reach.UR3ReachCfg",
         "rsl_rl_cfg_entry_point":f"{agents.__name__}.rsl_rl_ppo_cfg:UR3ReachPPORunnerCfg"
     }
 )
