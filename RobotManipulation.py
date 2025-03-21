@@ -40,7 +40,7 @@ from isaaclab.controllers import DifferentialIKController, DifferentialIKControl
 
 
 
-from isaaclab_assets import UR3_CFG #get the UR3 robot model 
+from isaaclab_assets import UR3_2F_140_CFG #get the UR3 robot model 
 
 @configclass
 class RobotSceneCfg(InteractiveSceneCfg):
@@ -60,18 +60,24 @@ class RobotSceneCfg(InteractiveSceneCfg):
     )
 
     #arituculation robot
-    robot  =UR3_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+    robot  =UR3_2F_140_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 
 def run_sim(sim:sim_utils.SimulationContext, scene: InteractiveScene):
     """ Run the simulation """
     robot=scene["robot"]
 
     ee_frame_name = "wrist_3_link" #Wrist 3 link is the end effector location for the UR3
-    arm_joint_names = [".*"]
+    arm_joint_names = ["shoulder_pan_joint",
+            "shoulder_lift_joint",
+            "elbow_joint",
+            "wrist_1_joint",
+            "wrist_2_joint",
+            "wrist_3_joint"]
     ee_frame_idx = robot.find_bodies(ee_frame_name)[0][0]
     arm_joint_ids = robot.find_joints(arm_joint_names)[0]
 
-
+    gripper_joint_names = ["left_outer_finger_joint","right_outer_finger_joint","finger_joint"]
+    gripper_joint_ids = robot.find_joints(gripper_joint_names)[0]
     diff_ik_cfg = DifferentialIKControllerCfg(command_type="pose", use_relative_mode=False, ik_method="dls")
     diff_ik_controller = DifferentialIKController(diff_ik_cfg, num_envs=scene.num_envs, device=sim.device)
     
@@ -101,6 +107,8 @@ def run_sim(sim:sim_utils.SimulationContext, scene: InteractiveScene):
 
     robot_entity_cfg =SceneEntityCfg("robot", joint_names=[".*"], body_names=["wrist_3_link"])
     robot_entity_cfg.resolve(scene)
+
+
 
     ee_jacobi_idx = robot_entity_cfg.body_ids[0] -1
 
@@ -140,6 +148,7 @@ def run_sim(sim:sim_utils.SimulationContext, scene: InteractiveScene):
             # compute the joint commands
             joint_pos_des = diff_ik_controller.compute(ee_pos_b, ee_quat_b, jacobian, joint_pos)
 
+        
 
         # apply actions
         robot.set_joint_position_target(joint_pos_des, joint_ids=robot_entity_cfg.joint_ids)
