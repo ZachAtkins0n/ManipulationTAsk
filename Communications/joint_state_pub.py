@@ -12,8 +12,8 @@ import rospy
 from sensor_msgs.msg import JointState
 import socket
 
-HOST = '127.0.0.1'  
-PORT = 65432   
+HOST = ""  
+PORT = 12345  
 
 def main():
     
