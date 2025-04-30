@@ -46,8 +46,8 @@ def start_server(server_ip, server_port, device_b_ip, device_b_port):
         threading.Thread(target=handle_device_a_connection, args=(client_socket, device_b_ip, device_b_port)).start()
 
 # Example usage
-server_ip = ''  # Server's IP address
-server_port = 12345         # Port for listening for Device A connections
+server_ip = 'zach.j.atkinson-andes.nord'  # Server's IP address
+server_port = 65432         # Port for listening for Device A connections
 device_b_ip = ''  # Device B's IP address
 device_b_port = 23456        # Port for Device B to receive data
 
