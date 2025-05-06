@@ -11,7 +11,7 @@ from isaaclab.utils import configclass
 @configclass
 class PlaceCubePPORunnerCfg(RslRlOnPolicyRunnerCfg):
     num_steps_per_env = 24
-    max_iterations = 2000 #Increase iteration
+    max_iterations = 1600 #Increase iteration
     save_interval = 50
     experiment_name = "UR3_Place"
     empirical_normalization = False
@@ -25,7 +25,7 @@ class PlaceCubePPORunnerCfg(RslRlOnPolicyRunnerCfg):
         value_loss_coef=1,
         use_clipped_value_loss=True,
         clip_param=0.2,
-        entropy_coef=0.008,
+        entropy_coef=0.004, #0.008
         num_learning_epochs=5,
         num_mini_batches=4,
         learning_rate=1.0e-4,

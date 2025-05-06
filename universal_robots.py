@@ -65,10 +65,10 @@ UR3_CFG = ArticulationCfg(
         joint_pos={
             "shoulder_pan_joint": 0.0,
             "shoulder_lift_joint": -1.65,
-            "elbow_joint": 1.6,
-            "wrist_1_joint": 1.5,
+            "elbow_joint": 0.56,
+            "wrist_1_joint": -0.9,
             "wrist_2_joint": 1.5,
-            "wrist_3_joint": 1.5,
+            "wrist_3_joint": 6,
         },
     ),
     actuators={
@@ -85,7 +85,7 @@ UR3_CFG = ArticulationCfg(
 """Configuration of UR-10 arm using implicit actuator models."""
 UR3_2F_85_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"C:/Users/zach/documents/test7.usd",
+        usd_path=f"/home/zach/FYP/ManipulationtTAsk/UR3GripperV2.usd",
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
             max_depenetration_velocity=5.0,
@@ -97,11 +97,11 @@ UR3_2F_85_CFG = ArticulationCfg(
      init_state=ArticulationCfg.InitialStateCfg(
      joint_pos={
             "shoulder_pan_joint": 0.0,
-            "shoulder_lift_joint": -1.65,
-            "elbow_joint": 1.6,
-            "wrist_1_joint": 1.5,
-            "wrist_2_joint": 1.5,
-            "wrist_3_joint": 1.5,
+            "shoulder_lift_joint": -1.45,
+            "elbow_joint": 1.15,
+            "wrist_1_joint": -0.9,
+            "wrist_2_joint": -1.5,
+            "wrist_3_joint": 6,
             "left_inner_finger_knuckle_joint" : 0.000,
             "right_inner_finger_knuckle_joint" : 0.000,
             "left_inner_finger_joint" : 0.000,
@@ -109,7 +109,7 @@ UR3_2F_85_CFG = ArticulationCfg(
            "right_outer_knuckle_joint" : 0.000,
             "left_outer_finger_joint":0.000,
             "right_outer_finger_joint": 0.000,
-            "finger_joint" : 0.00
+            "finger_joint" : 0.02
            
         },
      ),
@@ -149,7 +149,7 @@ UR3_2F_85_CFG = ArticulationCfg(
 """Configuration of UR3 with gripper 2F_140_CFG using implicit actuator models."""
 UR3_2F_140_CFG = ArticulationCfg(
     spawn=sim_utils.UsdFileCfg(
-        usd_path=f"C:/Users/zach/documents/test15.usd",  #Update file path to relevant location
+        usd_path=f"/home/zach/FYP/ManipulationtTAsk/UR3Gripper.usd",  #Update file path to relevant location
         rigid_props=sim_utils.RigidBodyPropertiesCfg(
             disable_gravity=False,
             max_depenetration_velocity=5.0,
@@ -168,7 +168,13 @@ UR3_2F_140_CFG = ArticulationCfg(
             "wrist_3_joint": 0,
             "finger_joint":0.2,
             "right_outer_knuckle_joint":0.0,
+            "left_inner_finger_joint" : 0.000,
+            "right_inner_finger_joint" : 0.000,
+            "left_outer_finger_joint":0.000,
+            "right_outer_finger_joint": 0.000,
          
+           
+        
            
         },
      ),
@@ -176,17 +182,70 @@ UR3_2F_140_CFG = ArticulationCfg(
     actuators={
         "arm": ImplicitActuatorCfg(
             joint_names_expr=["shoulder_pan_joint","shoulder_lift_joint", "elbow_joint", "wrist_1_joint","wrist_2_joint", "wrist_3_joint"],
-            velocity_limit=1.0,
-            effort_limit=60.0,
+            velocity_limit=50,
+            effort_limit=80.0,
             stiffness=800.0,
-            damping=40.0,
+            damping=40,
         ),
        
     "finger": ImplicitActuatorCfg(
             joint_names_expr=["finger_joint"],
-            velocity_limit = 1.2,
-            effort_limit=50.0,
-            stiffness=200,
+            velocity_limit = 40,
+            effort_limit=60.0,
+            stiffness=2e2,
+            damping=10,
+            friction = 0.8,
+
+        ),
+
+    }
+)
+
+
+"""Configuration of UR3 with gripper 2F_140_CFG using implicit actuator models."""
+UR3_2F_140_OFFSET_CFG = ArticulationCfg(
+    spawn=sim_utils.UsdFileCfg(
+        usd_path=f"/home/zach/FYP/ManipulationtTAsk/UR3Offset.usd",  #Update file path to relevant location
+        rigid_props=sim_utils.RigidBodyPropertiesCfg(
+            disable_gravity=False,
+            max_depenetration_velocity=5.0,
+            
+        ),
+       
+        activate_contact_sensors=True,
+    ),
+     init_state=ArticulationCfg.InitialStateCfg(
+     joint_pos={
+            "shoulder_pan_joint": 0.0,
+            "shoulder_lift_joint": -1.45,
+            "elbow_joint": 1.15,
+            "wrist_1_joint": 4.5,
+            "wrist_2_joint": -1.5,
+            "wrist_3_joint": 0,
+            "finger_joint":0.2,
+            "right_outer_knuckle_joint":0.0,
+            "left_inner_finger_joint" : 0.000,
+            "right_inner_finger_joint" : 0.000,
+            "left_outer_finger_joint":0.000,
+            "right_outer_finger_joint": 0.000,
+         
+        },
+     ),
+    
+    actuators={
+        "arm": ImplicitActuatorCfg(
+            joint_names_expr=["shoulder_pan_joint","shoulder_lift_joint", "elbow_joint", "wrist_1_joint","wrist_2_joint", "wrist_3_joint"],
+            velocity_limit=50,
+            effort_limit=80.0,
+            stiffness=800.0,
+            damping=40,
+        ),
+       
+    "finger": ImplicitActuatorCfg(
+            joint_names_expr=["finger_joint"],
+            velocity_limit = 40,
+            effort_limit=60.0,
+            stiffness=2e2,
             damping=10,
             friction = 0.8,
 

@@ -80,8 +80,9 @@ class CommandsCfg:
         resampling_time_range=(5.0, 5.0),
         debug_vis=True,
         ranges=mdp.UniformPoseCommandCfg.Ranges(
-            pos_x=(0.5, 0.5), pos_y=(0.0, 0.0), pos_z=(.1, 0.1), roll=(0.0, 0.0), pitch=(0.0, 0.0), yaw=(0.0, 0.0)
+            pos_x=(0.4, 0.4), pos_y=(0.0, 0.0), pos_z=(.1, 0.1), roll=(0.0, 0.0), pitch=(0.0, 0.0), yaw=(0.0, 0.0)
         ),)
+    
     
     goal_final_ee = mdp.UniformPoseCommandCfg(
         asset_name="robot",
@@ -92,6 +93,7 @@ class CommandsCfg:
             pos_x=(0.35,0.35),pos_y=(0,0),pos_z=(.2,0.2),roll=(0,0),pitch=(0,0),yaw=(0,0)
         )
     )
+    
 
     block_goal = mdp.UniformPoseCommandCfg(
         asset_name="robot",
@@ -99,7 +101,7 @@ class CommandsCfg:
         resampling_time_range=(5.0,5.0),
         debug_vis = True,
         ranges=mdp.UniformPoseCommandCfg.Ranges(
-            pos_x=(0.5,0.5),pos_y=(0,0),pos_z=(0.0,0.0),roll=(0,0),pitch=(0,0),yaw=(0,0)
+            pos_x=(0.4,0.4),pos_y=(0,0),pos_z=(0.05,0.05),roll=(0,0),pitch=(0,0),yaw=(0,0)
         )
     )
     
@@ -147,7 +149,7 @@ class EventCfg:
         func=mdp.reset_root_state_uniform,
         mode="reset",
         params={
-            "pose_range": {"x": (0.32, 0.42), "y": (-.25, 0.25), "z": (0.0, 0.0)},
+            "pose_range": {"x": (0.30, 0.40), "y": (-.25, 0.25), "z": (0.0, 0.0)},
             "velocity_range": {},
             "asset_cfg": SceneEntityCfg("object", body_names="Object"),
         },
@@ -160,7 +162,7 @@ class RewardsCfg:
 
     reaching_object = RewTerm(func=mdp.object_ee_distance, params={"std": 0.1}, weight=0.8)
 
-    lifting_object = RewTerm(func=mdp.object_is_lifted, params={"minimal_height": 0.1}, weight=12)
+    lifting_object = RewTerm(func=mdp.object_is_lifted, params={"minimal_height": 0.08}, weight=12)
 
     #Try this one with block goal 
    # move_ee_away = RewTerm(func=mdp.move_ee_away_placed, params={"minimal_height":0.1, "command_name": "object_pose", "std":0.1}, weight = -1)
@@ -189,7 +191,7 @@ class RewardsCfg:
     block_nearing_placement = RewTerm(
         func = mdp.is_obj_placed,
         params={"std": 0.2, "command_name": "block_goal"},
-        weight = 0.8 #increase this reward
+        weight = 1 #increase this reward
 
     )
 
@@ -205,34 +207,35 @@ class RewardsCfg:
     
     object_goal_tracking = RewTerm(
         func=mdp.object_goal_distance,
-        params={"std": 0.3, "minimal_height": 0.1, "command_name": "object_pose"},
-        weight=12,
+        params={"std": 0.3, "minimal_height": 0.15, "command_name": "object_pose"},
+        weight=20,
     )
     
     object_goal_tracking_fine_grained = RewTerm(
         func=mdp.object_goal_distance,
-        params={"std": 0.05, "minimal_height": 0.1, "command_name": "object_pose"},
-        weight=1,
+        params={"std": 0.05, "minimal_height": 0.15, "command_name": "object_pose"},
+        weight=3,
     )
     
+    """
     object_height = RewTerm(
         func = mdp.increasing_height,
         params={"std": 0.05,},
-        weight = 0.1
+        weight = 0.3
     )
-    
+    """
     object_at_goal_loc = RewTerm(
         func=mdp.object_goal_position,
         params={"std":0.2, "command_name":"block_goal"},
-        weight = 4
+        weight = 1
     )
 
     # action penalty
-    action_rate = RewTerm(func=mdp.action_rate_l2, weight=-1e-4)
+    action_rate = RewTerm(func=mdp.action_rate_l2, weight=-1e-5)
 
     joint_vel = RewTerm(
         func=mdp.joint_vel_l2,
-        weight=-1e-4,
+        weight=-1e-5,
         params={"asset_cfg": SceneEntityCfg("robot")},
     )
 
@@ -262,14 +265,26 @@ class CurriculumCfg:
     )
 
     object_goal_tracking = CurrTerm(
-        func=mdp.modify_reward_weight, params={"term_name": "object_goal_tracking", "weight": 5, "num_steps":25000}
+        func=mdp.modify_reward_weight, params={"term_name": "object_goal_tracking", "weight": 11, "num_steps":33000}
     )
 
 
-    lifting_object = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "lifting_object", "weight": 8, "num_steps": 25000})
-    object_height = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "object_height", "weight": -0.5, "num_steps": 25000})
-    block_nearing_goal = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "block_nearing_placement", "weight": 2, "num_steps": 18000})
-    object_at_goal_loc = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "object_at_goal_loc", "weight": 25, "num_steps": 18000})
+    lifting_object = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "lifting_object", "weight": 5.8, "num_steps": 35000})
+   # object_height = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "object_height", "weight": -0.05, "num_steps": 33000})
+    block_nearing_goal = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "block_nearing_placement", "weight": 7, "num_steps": 33000})
+    object_at_goal_loc = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "object_at_goal_loc", "weight": 12, "num_steps": 33000})  #18
+
+    """
+    lifting_object = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "lifting_object", "weight": 5, "num_steps": 45000})
+    
+    object_goal_tracking = CurrTerm(
+        func=mdp.modify_reward_weight, params={"term_name": "object_goal_tracking", "weight": 6.3, "num_steps":45000} #6.3
+    )
+    object_at_goal_loc = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "object_at_goal_loc", "weight": 18, "num_steps": 42000})  #18
+    block_nearing_goal = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "block_nearing_placement", "weight": 6, "num_steps": 42000})
+   #lifting_object = CurrTerm(func=mdp.modify_reward_weight, params={"term_name": "lifting_object", "weight": 1, "num_steps": 48000})
+   """
+
 
 ##
 # Environment configuration

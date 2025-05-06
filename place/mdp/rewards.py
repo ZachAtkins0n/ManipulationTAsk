@@ -170,14 +170,14 @@ def is_obj_placed(
 
     # Reward for reaching target (x, y)
     reward_xy = torch.exp(-distance_xy / std)  # Smooth reward for getting close
-    #reward_z = torch.exp(-torch.abs(object.data.root_pos_w[:, 2] - des_pos_w[:, 2]) / std)  # Encourage correct height
+    reward_z = torch.exp(-torch.abs(object.data.root_pos_w[:, 2] - des_pos_w[:, 2]) / std)  # Encourage correct height
 
     # Penalize being too high
     #penalty_z = torch.where(distance_z > height_threshold, -0.5 * torch.tanh(distance_z / std), 0.0)
 
    
     # Combine rewards
-    reward = reward_xy #* reward_z 
+    reward = reward_xy * reward_z 
 
     return reward
 
@@ -381,9 +381,9 @@ def object_goal_position(
     x_pos = object.data.root_pos_w[:,0]
     y_pos = object.data.root_pos_w[:,1]
     z_pos = object.data.root_pos_w[:,2]
-    condition_x = torch.logical_and(x_pos > des_pos_w[:,0] -0.02,  x_pos <des_pos_w[:,0]+0.02) 
-    condition_y = torch.logical_and(y_pos > des_pos_w[:,1]-0.02, y_pos <des_pos_w[:,1]+0.02)
-    condition_z = z_pos <= des_pos_w[:,2]+0.02
+    condition_x = torch.logical_and(x_pos > des_pos_w[:,0] -0.08,  x_pos <des_pos_w[:,0]+0.08) 
+    condition_y = torch.logical_and(y_pos > des_pos_w[:,1]-0.08, y_pos <des_pos_w[:,1]+0.08)
+    condition_z = z_pos <= des_pos_w[:,2]+0.05
     condition_xy = torch.logical_and(condition_x, condition_y,)
     condition = torch.logical_and(condition_xy, condition_z,)
     
