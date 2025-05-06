@@ -18,7 +18,7 @@ from isaaclab_tasks.manager_based.manipulation.place.place_env_cfg import PlaceE
 # Pre-defined configs
 ##
 from isaaclab.markers.config import FRAME_MARKER_CFG  # isort: skip
-from isaaclab_assets import UR3_2F_140_CFG  # isort: skip
+from isaaclab_assets import UR3_2F_85_CFG  # isort: skip UR3_2F_140_CFG FOr without offset
 
 
 
@@ -29,7 +29,7 @@ class UR3CubePlaceEnvCfg(PlaceEnvCfg):
         super().__post_init__()
 
         # Set Franka as robot
-        self.scene.robot = UR3_2F_140_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
+        self.scene.robot = UR3_2F_85_CFG.replace(prim_path="{ENV_REGEX_NS}/Robot")
 
         # Set actions for the specific robot type (franka)
         self.actions.arm_action = mdp.JointPositionActionCfg(
@@ -60,8 +60,8 @@ class UR3CubePlaceEnvCfg(PlaceEnvCfg):
            },
         )
         # Set the body name for the end effector
-        self.commands.object_pose.body_name = "robotiq_base_link"
-        self.commands.goal_final_ee.body_name = "robotiq_base_link"
+        self.commands.object_pose.body_name = "wrist_3_link"
+        self.commands.goal_final_ee.body_name = "wrist_3_link"
 
 
         # Set Cube as object
@@ -70,7 +70,7 @@ class UR3CubePlaceEnvCfg(PlaceEnvCfg):
             init_state=RigidObjectCfg.InitialStateCfg(pos=[0.0, 0, 0.00], rot=[1, 0, 0, 0]),
             spawn=UsdFileCfg(
                 usd_path=f"{ISAAC_NUCLEUS_DIR}/Props/Blocks/DexCube/dex_cube_instanceable.usd",
-                scale=(0.65, 0.65, 0.65),
+                scale=(0.5, 0.5, 0.5),
                 rigid_props=RigidBodyPropertiesCfg(
                     solver_position_iteration_count=16,
                     solver_velocity_iteration_count=1,
@@ -82,22 +82,22 @@ class UR3CubePlaceEnvCfg(PlaceEnvCfg):
             ),
         )
 
-        self.commands.block_goal.body_name = "base_link"
+        self.commands.block_goal.body_name = "wrist_3_link"
                 
         # Listens to the required transforms
         marker_cfg = FRAME_MARKER_CFG.copy()
         marker_cfg.markers["frame"].scale = (0.1, 0.1, 0.1)
         marker_cfg.prim_path = "/Visuals/FrameTransformer"
         self.scene.ee_frame = FrameTransformerCfg(
-            prim_path="{ENV_REGEX_NS}/Robot/base_link",
+            prim_path="{ENV_REGEX_NS}/Robot/wrist_3_link",
             debug_vis=False,
-            visualizer_cfg=marker_cfg,
+            #visualizer_cfg=marker_cfg,
             target_frames=[
                 FrameTransformerCfg.FrameCfg(
-                    prim_path="{ENV_REGEX_NS}/Robot/Robotiq_2F_140_physics_edit/robotiq_base_link",
+                    prim_path="{ENV_REGEX_NS}/Robot/wrist_3_link",
                     name="end_effector",
                     offset=OffsetCfg(
-                        pos=[.0, 0.0, 0.23], #0.225
+                        pos=[.0, 0.0, 0.185], #0.225
                         rot=[1, 0,0,0]
                     ),
                 ),
