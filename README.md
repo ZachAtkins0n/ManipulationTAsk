@@ -19,10 +19,9 @@ https://github.com/user-attachments/assets/96524547-7c89-4012-a6a0-c447ba636ac0
 # Sim2Real Communications 
 To physically control the robot itself socket connections therefore IP address are required, a VPN is required if remotely connected. 
 
-The observed joint data from play.py will be sent to a server ur_ros_joint device that will receive the data Using the ur_ros_drivers package:
-  https://github.com/UniversalRobots/Universal_Robots_ROS_Driver on the server and connect to the UR3.
-
-Running the ur_joint_state.py using ROS will establish a server, running the play.py on the IsaacLab side will start sending data via socket connections in the VPN.
+In order to run joint_state_pub.py you will need ROS Noetic on python 3.10 Ubuntu 20.04. To run this have ROS workspace set up and copy the joint_state_pub.py file in the ROS File into your workspace.
+You will need the Universal ROS Driver as well, please follow the instructions: https://github.com/UniversalRobots/Universal_Robots_ROS_Driver
+Running the joint_state_pub.py using ROS will establish a server, running the play.py on the IsaacLab side will start sending data via socket connections in the VPN.
 
 
 # Outcome
