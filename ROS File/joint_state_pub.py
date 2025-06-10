@@ -14,7 +14,7 @@ from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 import csv
 import time
 
-HOST = "zach.j.atkinson-andes.nord" #Change to device host address  
+HOST = "" #Change to device host address  
 PORT = 65432   
 
 def main():
