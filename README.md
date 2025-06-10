@@ -7,7 +7,7 @@ This project was designed to create a RL policy for controlling a UR3 with a Rob
 # Running the RL Policy
 To run the RL policy code this requires Isaaclab and Isaac Sim.
 
-To run: Copy and pace place_env_cfg.py, __init__.py, mdp and config folder in manager based RL directory in Isaac Lab.
+To run: Copy and paste the place directory that includes:  place_env_cfg.py, __init__.py, mdp and config folder in manager based RL directory in Isaac Lab.
 
 Save the universal_robots.py in Isaaclab_assets/robots and modify the required file paths to location of UR3_Gripper.usd 
 
